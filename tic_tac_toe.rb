@@ -1,5 +1,5 @@
 class Game < Array
-    attr_accessor :board, :center_center
+    attr_accessor :board
     attr_reader :x, :o
 
     def initialize
@@ -179,4 +179,3 @@ class Player
     end
 
 end
-
