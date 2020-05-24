@@ -63,34 +63,36 @@ class Game < Array
             puts "POSITION IS OCCUPIED"
         else
             @turn_counter.odd? ? self.board[0][0] = "x" : self.board[0][0] = "o"
+            @turn_counter += 1
         end
-        @turn_counter += 1
+    
         show_board
     end
 
     def top_center
         if self.board[0][2] != " "
-            "POSITION IS OCCUPIED"
+            puts"POSITION IS OCCUPIED"
         else
             @turn_counter.odd? ? self.board[0][2] = "x" : self.board[0][2] = "o"
+            @turn_counter += 1
         end
-        @turn_counter += 1
         show_board
     end
 
     def top_right
         if self.board[0][4] != " "
-            "POSITION IS OCCUPIED"
+            puts "POSITION IS OCCUPIED"
         else
             @turn_counter.odd? ? self.board[0][4] = "x" : self.board[0][4] = "o"
+            @turn_counter += 1
         end
-        @turn_counter += 1
+        
         show_board
     end
 
     def center_left
         if self.board[2][0] != " "
-            "POSITION IS OCCUPIED"
+            puts "POSITION IS OCCUPIED"
         else
             @turn_counter.odd? ? self.board[2][0] = "x" : self.board[2][0] = "o"
             @turn_counter += 1
@@ -100,7 +102,7 @@ class Game < Array
 
     def center
         if self.board[2][2] != " "
-            "POSITION IS OCCUPIED"
+           puts "POSITION IS OCCUPIED"
         else
             @turn_counter.odd? ? self.board[2][2] = "x" : self.board[2][2] = "o"
             @turn_counter += 1
@@ -110,7 +112,7 @@ class Game < Array
 
     def center_right
         if self.board[2][4] != " "
-            "POSITION IS OCCUPIED"
+           puts "POSITION IS OCCUPIED"
         else
             @turn_counter.odd? ? self.board[2][4] = "x" : self.board[2][4] = "o"
             @turn_counter += 1
@@ -120,7 +122,7 @@ class Game < Array
 
     def bottom_left
         if self.board[4][0] != " "
-            "POSITION IS OCCUPIED"
+           puts "POSITION IS OCCUPIED"
         else
             @turn_counter.odd? ? self.board[4][0] = "x" : self.board[4][0] = "o"
             @turn_counter += 1
@@ -130,7 +132,7 @@ class Game < Array
 
     def bottom_center
         if self.board[4][2] != " "
-            "POSITION IS OCCUPIED"
+            puts "POSITION IS OCCUPIED"
         else
             @turn_counter.odd? ? self.board[4][2] = "x" : self.board[4][2] = "o"
             @turn_counter += 1
@@ -140,7 +142,7 @@ class Game < Array
     
     def bottom_right
         if self.board[4][4] != " "
-            "POSITION IS OCCUPIED"
+            puts "POSITION IS OCCUPIED"
         else
             @turn_counter.odd? ? self.board[4][4] = "x" : self.board[4][4] = "o"
             @turn_counter += 1
