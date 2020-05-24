@@ -1,3 +1,5 @@
+require 'pry'
+
 class Game < Array
     attr_accessor :board
     attr_reader :x, :o
@@ -53,6 +55,40 @@ class Game < Array
                 bottom_right
                 
             end
+        end
+    end
+
+    def game_over?
+        horizontal = [
+                    [@board[0][0], @board[0][2], @board[0][4]], 
+                    [@board[2][0], @board[2][2], @board[2][4]], 
+                    [@board[4][0], @board[4][2], @board[4][4]]
+                    ]           
+        vertical = [
+                    [@board[0][0], @board[2][0], @board[4][0]], 
+                    [@board[0][2], @board[2][2], @board[4][2]], 
+                    [@board[0][4], @board[2][4], @board[4][4]]
+                    ]
+        diagonal = [[@board[0][0], @board[2][2], @board[4][4]], 
+                    [@board[4][0], @board[2][2], @board[0][4]]
+                    ]
+
+        if (horizontal[0].uniq.size <= 1 && horizontal[0].uniq != [" "])|| 
+           (horizontal[1].uniq.size <= 1 && horizontal[1].uniq != [" "])|| 
+           (horizontal[2].uniq.size <= 1 && horizontal[2].uniq != [" "])
+            true
+        elsif (vertical[0].uniq.size <= 1 && vertical[0].uniq != [" "])|| 
+              (vertical[1].uniq.size <= 1 && vertical[1].uniq != [" "])|| 
+              (vertical[2].uniq.size <= 1 && vertical[2].uniq != [" "])
+            true
+        elsif (diagonal[0].uniq.size <= 1 && diagonal[0].uniq != [" "])|| 
+              (diagonal[1].uniq.size <= 1 && diagonal[1].uniq != [" "])
+            true
+        elsif (horizontal[0].uniq.size > 1 && horizontal[1].uniq.size > 1 && horizontal[2].uniq.size > 1) && horizontal.include?(" ") == false
+            
+            true
+        else
+            false
         end
     end
 
@@ -181,3 +217,4 @@ class Player
     end
 
 end
+
