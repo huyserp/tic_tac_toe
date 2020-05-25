@@ -1,20 +1,26 @@
 require 'pry'
 
 class Game < Array
-    attr_accessor :board
+    attr_accessor :board, :marker, :top_left, :top_center, :top_right, :center_left, :center,
+                  :center_right, :bottom_left, :bottom_center, :bottom_right
     attr_reader :x, :o
-
+    
     def initialize
-        self.board = [
-            [" ", "|", " ", "|", " "], 
-            ["-","-","-","-","-"],
-            [" ", "|", " ", "|", " "], 
-            ["-","-","-","-","-"],
-            [" ", "|", " ", "|", " "]
-                ]
+
+        self.top_left = " "
+        self.top_center = " "
+        self.top_right = " "
+        self.center_left = " "
+        self.center = " "
+        self.center_right = " "
+        self.bottom_left = " "
+        self.bottom_center = " "
+        self.bottom_right = " "
+        
         @x = "x"
         @o = "o"
-        @turn_counter = 1
+        @turn_counter = 2
+        self.marker = self.x
         
         show_board
     end
@@ -22,41 +28,94 @@ class Game < Array
     def place_marker(position)
         position = position.downcase
         option_grid = ["top left", "top center", "top right", 
-            "center left", "center", "center right", "bottom left", 
-            "bottom center", "bottom right"]
+                       "center left", "center", "center right", 
+                       "bottom left", "bottom center", "bottom right"]
 
-        if option_grid.include?(position) == false 
+
+        if position == "top left"
+                if self.top_left != " "
+                    puts "POSITION IS OCCUPIED"
+                else
+                    marker = self.marker
+                    self.top_left = marker
+                    @turn_counter += 1
+                end
+        elsif position == "top center"
+                if self.top_center != " "
+                    puts "POSITION IS OCCUPIED"
+                else
+                    marker = self.marker
+                    self.top_center = marker
+                    @turn_counter += 1
+                end
+        elsif position ==  "top right"
+                if self.top_right != " "
+                    puts "POSITION IS OCCUPIED"
+                else
+                    marker = self.marker
+                    self.top_right = marker
+                    @turn_counter += 1
+                end
+        elsif position == "center left"
+                if self.center_left != " "
+                    puts "POSITION IS OCCUPIED"
+                else
+                    marker = self.marker
+                    self.center_left = marker
+                    @turn_counter += 1
+                end
+        elsif position == "center"
+                if self.center != " "
+                    puts "POSITION IS OCCUPIED"
+                else
+                    marker = self.marker
+                    self.center = marker
+                    @turn_counter += 1
+                end
+        elsif position == "center right"
+                if self.center_right != " "
+                    puts "POSITION IS OCCUPIED"
+                else
+                    marker = self.marker
+                    self.center_right = marker
+                    @turn_counter += 1
+                end
+        elsif position == "bottom left"
+                if self.bottom_left != " "
+                    puts "POSITION IS OCCUPIED"
+                else
+                    marker = self.marker
+                    self.bottom_left = marker
+                    @turn_counter += 1
+                end
+        elsif position == "bottom center"
+                if self.bottom_center != " "
+                    puts "POSITION IS OCCUPIED"
+                else
+                    marker = self.marker
+                    self.bottom_center = marker
+                    @turn_counter += 1
+                end
+        elsif position == "bottom right"
+                if self.bottom_right != " "
+                    puts "POSITION IS OCCUPIED"
+                else
+                    marker = self.marker
+                    self.bottom_right = marker
+                    @turn_counter += 1
+                end
+        else
             puts
             puts "Please pick a valid position, your options are:"
             puts
             option_grid.each do |option|
                puts option
             end
-            puts
-        else
-            case position
-            when "top left"
-                top_left
-            when "top center"
-                top_center
-            when "top right"
-                top_right
-            when "center left"
-                center_left
-            when "center"
-                center
-            when "center right"
-                center_right
-            when "bottom left"
-                bottom_left
-            when "bottom center"
-                bottom_center
-            when "bottom right"
-                bottom_right
-                
-            end
         end
+            show_board
+            change_turn
     end
+
 
     def game_over?
         horizontal = [
@@ -94,101 +153,20 @@ class Game < Array
 
     private
 
-    def top_left
-        if self.board[0][0] != " "
-            puts "POSITION IS OCCUPIED"
-        else
-            @turn_counter.odd? ? self.board[0][0] = "x" : self.board[0][0] = "o"
-            @turn_counter += 1
-        end
-    
-        show_board
-    end
-
-    def top_center
-        if self.board[0][2] != " "
-            puts"POSITION IS OCCUPIED"
-        else
-            @turn_counter.odd? ? self.board[0][2] = "x" : self.board[0][2] = "o"
-            @turn_counter += 1
-        end
-        show_board
-    end
-
-    def top_right
-        if self.board[0][4] != " "
-            puts "POSITION IS OCCUPIED"
-        else
-            @turn_counter.odd? ? self.board[0][4] = "x" : self.board[0][4] = "o"
-            @turn_counter += 1
-        end
-        
-        show_board
-    end
-
-    def center_left
-        if self.board[2][0] != " "
-            puts "POSITION IS OCCUPIED"
-        else
-            @turn_counter.odd? ? self.board[2][0] = "x" : self.board[2][0] = "o"
-            @turn_counter += 1
-        end
-        show_board
-    end
-
-    def center
-        if self.board[2][2] != " "
-           puts "POSITION IS OCCUPIED"
-        else
-            @turn_counter.odd? ? self.board[2][2] = "x" : self.board[2][2] = "o"
-            @turn_counter += 1
-        end
-        show_board
-    end
-
-    def center_right
-        if self.board[2][4] != " "
-           puts "POSITION IS OCCUPIED"
-        else
-            @turn_counter.odd? ? self.board[2][4] = "x" : self.board[2][4] = "o"
-            @turn_counter += 1
-        end
-        show_board
-    end
-
-    def bottom_left
-        if self.board[4][0] != " "
-           puts "POSITION IS OCCUPIED"
-        else
-            @turn_counter.odd? ? self.board[4][0] = "x" : self.board[4][0] = "o"
-            @turn_counter += 1
-        end
-        show_board
-    end
-
-    def bottom_center
-        if self.board[4][2] != " "
-            puts "POSITION IS OCCUPIED"
-        else
-            @turn_counter.odd? ? self.board[4][2] = "x" : self.board[4][2] = "o"
-            @turn_counter += 1
-        end
-        show_board
-    end
-    
-    def bottom_right
-        if self.board[4][4] != " "
-            puts "POSITION IS OCCUPIED"
-        else
-            @turn_counter.odd? ? self.board[4][4] = "x" : self.board[4][4] = "o"
-            @turn_counter += 1
-        end
-        show_board
+    def change_turn
+        @turn_counter.odd? ? self.marker = self.x : self.marker = self.o
     end
 
     def show_board
+        self.board = [
+            [self.top_left, "|", self.top_center, "|", self.top_right], 
+            ["-","-","-","-","-"],
+            [self.center_left, "|", self.center, "|", self.center_right], 
+            ["-","-","-","-","-"],
+            [self.bottom_left, "|", self.bottom_center, "|", self.bottom_right]
+                ]
         puts
-        @board.each do |row|
+        self.board.each do |row|
            puts row.each { |position| position }.join('')
         end
         puts
@@ -218,3 +196,6 @@ class Player
 
 end
 
+# game = Game.new
+# game.place_marker("top left")
+# game.place_marker("center")
