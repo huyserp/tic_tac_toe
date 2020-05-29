@@ -1,12 +1,11 @@
 require 'pry'
 
-class Game < Array
+class Game
     attr_accessor :board, :marker, :top_left, :top_center, :top_right, :center_left, :center,
                   :center_right, :bottom_left, :bottom_center, :bottom_right
-    attr_reader :x, :o
+   
     
     def initialize
-
         self.top_left = " "
         self.top_center = " "
         self.top_right = " "
@@ -17,21 +16,37 @@ class Game < Array
         self.bottom_center = " "
         self.bottom_right = " "
         
-        @x = "x"
-        @o = "o"
-        @turn_counter = 2
-        self.marker = self.x
-        
-        show_board
+        @the_winner = nil
+       
+        @turn_counter = 1
+        self.marker = "x"
     end
+
+    def play
+        self.show_board
+        while self.game_over? == false
+            puts "Where would you like to place your marker?"
+            position = gets.chomp
+            self.place_marker(position)
+            self.game_over?
+            binding.pry
+        end
+        puts "The game is over '#{@the_winner}' take the win!"
+        self.clear_board
+
+        puts "would you like to play again? yes / no"
+        play_again = gets.chomp
+        play_again.downcase == "yes" ? self.play : "Goodbye!"
+    end
+
 
     def place_marker(position)
         position = position.downcase
-        option_grid = ["top left", "top center", "top right", 
+        options = ["top left", "top center", "top right", 
                        "center left", "center", "center right", 
                        "bottom left", "bottom center", "bottom right"]
 
-
+    
         if position == "top left"
                 if self.top_left != " "
                     puts "POSITION IS OCCUPIED"
@@ -108,7 +123,7 @@ class Game < Array
             puts
             puts "Please pick a valid position, your options are:"
             puts
-            option_grid.each do |option|
+            options.each do |option|
                puts option
             end
         end
@@ -116,45 +131,36 @@ class Game < Array
             change_turn
     end
 
+    def check_winner
+        horizontal_top = self.top_left + self.top_center + self.top_right
+        horizontal_center = self.center_left + self.center + self.center_right
+        horizontal_bottom = self.bottom_left + self.bottom_center + self.bottom_right
 
-    def game_over?
-        horizontal = [
-                    [@board[0][0], @board[0][2], @board[0][4]], 
-                    [@board[2][0], @board[2][2], @board[2][4]], 
-                    [@board[4][0], @board[4][2], @board[4][4]]
-                    ]           
-        vertical = [
-                    [@board[0][0], @board[2][0], @board[4][0]], 
-                    [@board[0][2], @board[2][2], @board[4][2]], 
-                    [@board[0][4], @board[2][4], @board[4][4]]
-                    ]
-        diagonal = [[@board[0][0], @board[2][2], @board[4][4]], 
-                    [@board[4][0], @board[2][2], @board[0][4]]
-                    ]
+        vertical_left = self.top_left + self.center_left + self.bottom_left
+        vertical_center = self.top_center + self.center + self.bottom_center
+        vertical_right = self.top_right + self.center_right + self.bottom_right
 
-        if (horizontal[0].uniq.size <= 1 && horizontal[0].uniq != [" "])|| 
-           (horizontal[1].uniq.size <= 1 && horizontal[1].uniq != [" "])|| 
-           (horizontal[2].uniq.size <= 1 && horizontal[2].uniq != [" "])
-            true
-        elsif (vertical[0].uniq.size <= 1 && vertical[0].uniq != [" "])|| 
-              (vertical[1].uniq.size <= 1 && vertical[1].uniq != [" "])|| 
-              (vertical[2].uniq.size <= 1 && vertical[2].uniq != [" "])
-            true
-        elsif (diagonal[0].uniq.size <= 1 && diagonal[0].uniq != [" "])|| 
-              (diagonal[1].uniq.size <= 1 && diagonal[1].uniq != [" "])
-            true
-        elsif (horizontal[0].uniq.size > 1 && horizontal[1].uniq.size > 1 && horizontal[2].uniq.size > 1) && horizontal.include?(" ") == false
-            
-            true
-        else
-            false
-        end
+        diagonal_decending = self.top_left + self.center + self.bottom_right
+        diagonal_ascending = self.bottom_left + self.center + self.top_right
+
+        winning_options = [horizontal_top, horizontal_center, horizontal_bottom, 
+                           vertical_left, vertical_center, vertical_right,
+                           diagonal_ascending,diagonal_decending]
+
+        combo = winning_options.select { |option| option.eql?("xxx") || option.eql?("ooo") }.pop
+        
+        @the_winner = combo[0] if combo
+
     end
 
-    private
+    def game_over?
+        self.check_winner
+        @the_winner == nil ? false : true
+    end
+    
 
     def change_turn
-        @turn_counter.odd? ? self.marker = self.x : self.marker = self.o
+        @turn_counter.odd? ? self.marker = "x" : self.marker = "o"
     end
 
     def show_board
@@ -172,6 +178,9 @@ class Game < Array
         puts
     end
 
+    def clear_board
+        initialize
+    end
 end
 
 class Player
@@ -195,7 +204,3 @@ class Player
     end
 
 end
-
-# game = Game.new
-# game.place_marker("top left")
-# game.place_marker("center")
