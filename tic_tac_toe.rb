@@ -1,8 +1,9 @@
 require 'pry'
 
-class Game
+class TicTacToe
     attr_accessor :board, :marker, :top_left, :top_center, :top_right, :center_left, :center,
                   :center_right, :bottom_left, :bottom_center, :bottom_right
+    attr_reader :tie, :the_winner
    
     
     def initialize
@@ -17,6 +18,7 @@ class Game
         self.bottom_right = " "
         
         @the_winner = nil
+        @tie = nil
        
         @turn_counter = 1
         self.marker = "x"
@@ -29,9 +31,14 @@ class Game
             position = gets.chomp
             self.place_marker(position)
             self.game_over?
-            binding.pry
         end
-        puts "The game is over '#{@the_winner}' take the win!"
+
+       if @tie
+            puts "It's a cat's game..."
+       else
+            puts "The game is over '#{@the_winner}' takes the win!"
+       end
+
         self.clear_board
 
         puts "would you like to play again? yes / no"
@@ -148,14 +155,22 @@ class Game
                            diagonal_ascending,diagonal_decending]
 
         combo = winning_options.select { |option| option.eql?("xxx") || option.eql?("ooo") }.pop
-        
+    
         @the_winner = combo[0] if combo
+    end
 
+    def check_cats_game
+        empty_squares = 0
+        @board.each do |row|
+            row.each { |position| empty_squares += 1 if position == " " }
+        end
+        @tie = true if empty_squares == 0
     end
 
     def game_over?
         self.check_winner
-        @the_winner == nil ? false : true
+        self.check_cats_game
+        @the_winner || @tie ? true : false
     end
     
 
@@ -204,3 +219,6 @@ class Player
     end
 
 end
+
+game = TicTacToe.new
+game.play
