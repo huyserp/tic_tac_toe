@@ -5,7 +5,6 @@ class TicTacToe
                   :center_right, :bottom_left, :bottom_center, :bottom_right
     attr_reader :tie, :the_winner
    
-    
     def initialize
         self.top_left = " "
         self.top_center = " "
@@ -27,109 +26,89 @@ class TicTacToe
     def play
         self.show_board
         while self.game_over? == false
-            puts "Where would you like to place your marker?"
+            puts "#{self.marker}: Where do you want to play?"
             position = gets.chomp
             self.place_marker(position)
             self.game_over?
         end
-
-       if @tie
-            puts "It's a cat's game..."
-       else
-            puts "The game is over '#{@the_winner}' takes the win!"
-       end
-
-        self.clear_board
-
-        puts "would you like to play again? yes / no"
-        play_again = gets.chomp
-        play_again.downcase == "yes" ? self.play : "Goodbye!"
+       puts @tie ? "It's a cat's game..." : "The game is over, '#{@the_winner}' takes the win!"
+       self.clear_board
+       puts "would you like to play again? yes / no"
+       play_again = gets.chomp
+       play_again.downcase == "yes" ? self.play : puts("Goodbye!")
     end
-
-
+    
     def place_marker(position)
         position = position.downcase
-        options = ["top left", "top center", "top right", 
-                       "center left", "center", "center right", 
-                       "bottom left", "bottom center", "bottom right"]
-
-    
-        if position == "top left"
-                if self.top_left != " "
-                    puts "POSITION IS OCCUPIED"
-                else
-                    marker = self.marker
-                    self.top_left = marker
-                    @turn_counter += 1
-                end
-        elsif position == "top center"
-                if self.top_center != " "
-                    puts "POSITION IS OCCUPIED"
-                else
-                    marker = self.marker
-                    self.top_center = marker
-                    @turn_counter += 1
-                end
-        elsif position ==  "top right"
-                if self.top_right != " "
-                    puts "POSITION IS OCCUPIED"
-                else
-                    marker = self.marker
-                    self.top_right = marker
-                    @turn_counter += 1
-                end
-        elsif position == "center left"
-                if self.center_left != " "
-                    puts "POSITION IS OCCUPIED"
-                else
-                    marker = self.marker
-                    self.center_left = marker
-                    @turn_counter += 1
-                end
-        elsif position == "center"
-                if self.center != " "
-                    puts "POSITION IS OCCUPIED"
-                else
-                    marker = self.marker
-                    self.center = marker
-                    @turn_counter += 1
-                end
-        elsif position == "center right"
-                if self.center_right != " "
-                    puts "POSITION IS OCCUPIED"
-                else
-                    marker = self.marker
-                    self.center_right = marker
-                    @turn_counter += 1
-                end
-        elsif position == "bottom left"
-                if self.bottom_left != " "
-                    puts "POSITION IS OCCUPIED"
-                else
-                    marker = self.marker
-                    self.bottom_left = marker
-                    @turn_counter += 1
-                end
-        elsif position == "bottom center"
-                if self.bottom_center != " "
-                    puts "POSITION IS OCCUPIED"
-                else
-                    marker = self.marker
-                    self.bottom_center = marker
-                    @turn_counter += 1
-                end
-        elsif position == "bottom right"
-                if self.bottom_right != " "
-                    puts "POSITION IS OCCUPIED"
-                else
-                    marker = self.marker
-                    self.bottom_right = marker
-                    @turn_counter += 1
-                end
+        occupied = "POSITION IS OCCUPIED"
+        options = ["top left", "top center", "top right", "center left", "center",
+                   "center right", "bottom left", "bottom center", "bottom right"]
+        case position
+        when "top left"
+            if self.top_left != " "
+                puts occupied
+            else
+                self.top_left = self.marker
+                @turn_counter += 1
+            end
+        when "top center"
+            if self.top_center != " "
+                puts occupied
+            else
+                self.top_center = self.marker
+                @turn_counter += 1
+            end
+        when "top right"
+            if self.top_right != " "
+                puts occupied
+            else
+                self.top_right = self.marker
+                @turn_counter += 1
+            end
+        when "center left"
+            if self.center_left != " "
+                puts occupied
+            else
+                self.center_left = self.marker
+                @turn_counter += 1
+            end
+        when "center"
+            if self.center != " "
+                puts occupied
+            else
+                self.center = self.marker
+                @turn_counter += 1
+            end
+        when "center right"
+            if self.center_right != " "
+                puts occupied
+            else
+                self.center_right = self.marker
+                @turn_counter += 1
+            end
+        when "bottom left"
+            if self.bottom_left != " "
+                puts occupied
+            else
+                self.bottom_left = self.marker
+                @turn_counter += 1
+            end
+        when "bottom center"
+            if self.bottom_center != " "
+                puts occupied
+            else
+                self.bottom_center = self.marker
+                @turn_counter += 1
+            end
+        when "bottom right"
+            if self.bottom_right != " "
+                puts occupied
+            else
+                self.bottom_right = self.marker
+                @turn_counter += 1
+            end
         else
-            puts
             puts "Please pick a valid position, your options are:"
-            puts
             options.each do |option|
                puts option
             end
@@ -164,7 +143,7 @@ class TicTacToe
         @board.each do |row|
             row.each { |position| empty_squares += 1 if position == " " }
         end
-        @tie = true if empty_squares == 0
+        @tie = true if empty_squares == 0 && @the_winner == false
     end
 
     def game_over?
