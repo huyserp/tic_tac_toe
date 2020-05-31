@@ -16,27 +16,28 @@ class TicTacToe
         self.bottom_center = " "
         self.bottom_right = " "
         
-        @the_winner = nil
-        @tie = nil
+        @the_winner = false
+        @tie = false
        
         @turn_counter = 1
         self.marker = "x"
     end
 
     def play
-        self.show_board
-        while self.game_over? == false
+        show_board
+        while game_over? == false
             puts "#{self.marker}: Where do you want to play?"
             position = gets.chomp
-            self.place_marker(position)
-            self.game_over?
+            place_marker(position)
         end
        puts @tie ? "It's a cat's game..." : "The game is over, '#{@the_winner}' takes the win!"
-       self.clear_board
+       clear_board
        puts "would you like to play again? yes / no"
        play_again = gets.chomp
        play_again.downcase == "yes" ? self.play : puts("Goodbye!")
     end
+
+    private
     
     def place_marker(position)
         position = position.downcase
@@ -129,9 +130,8 @@ class TicTacToe
         diagonal_decending = self.top_left + self.center + self.bottom_right
         diagonal_ascending = self.bottom_left + self.center + self.top_right
 
-        winning_options = [horizontal_top, horizontal_center, horizontal_bottom, 
-                           vertical_left, vertical_center, vertical_right,
-                           diagonal_ascending,diagonal_decending]
+        winning_options = [horizontal_top, horizontal_center, horizontal_bottom, vertical_left, 
+                           vertical_center, vertical_right, diagonal_ascending, diagonal_decending]
 
         combo = winning_options.select { |option| option.eql?("xxx") || option.eql?("ooo") }.pop
     
@@ -147,8 +147,8 @@ class TicTacToe
     end
 
     def game_over?
-        self.check_winner
-        self.check_cats_game
+        check_winner
+        check_cats_game
         @the_winner || @tie ? true : false
     end
     
