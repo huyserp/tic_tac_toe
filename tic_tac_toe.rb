@@ -1,20 +1,14 @@
 require 'pry'
 
 class TicTacToe
-    attr_accessor :board, :marker, :top_left, :top_center, :top_right, :center_left, :center,
-                  :center_right, :bottom_left, :bottom_center, :bottom_right
+    attr_accessor :board, :marker
     attr_reader :tie, :the_winner
    
     def initialize
-        self.top_left = " "
-        self.top_center = " "
-        self.top_right = " "
-        self.center_left = " "
-        self.center = " "
-        self.center_right = " "
-        self.bottom_left = " "
-        self.bottom_center = " "
-        self.bottom_right = " "
+        @gap = " "
+        @choices = {"top left" => @gap, "top center" => @gap, "top right" => @gap,
+                    "center left" => @gap, "center" => @gap, "center right" => @gap,
+                    "bottom left" => @gap, "bottom center" => @gap, "bottom right" => @gap}
         
         @the_winner = false
         @tie = false
@@ -27,7 +21,7 @@ class TicTacToe
         show_board
         while game_over? == false
             puts "#{self.marker}: Where do you want to play?"
-            position = gets.chomp
+            position = gets.chomp.downcase
             place_marker(position)
         end
        puts @tie ? "It's a cat's game..." : "The game is over, '#{@the_winner}' takes the win!"
@@ -42,93 +36,33 @@ class TicTacToe
     def place_marker(position)
         position = position.downcase
         occupied = "POSITION IS OCCUPIED"
-        options = ["top left", "top center", "top right", "center left", "center",
-                   "center right", "bottom left", "bottom center", "bottom right"]
-        case position
-        when "top left"
-            if self.top_left != " "
-                puts occupied
-            else
-                self.top_left = self.marker
-                @turn_counter += 1
-            end
-        when "top center"
-            if self.top_center != " "
-                puts occupied
-            else
-                self.top_center = self.marker
-                @turn_counter += 1
-            end
-        when "top right"
-            if self.top_right != " "
-                puts occupied
-            else
-                self.top_right = self.marker
-                @turn_counter += 1
-            end
-        when "center left"
-            if self.center_left != " "
-                puts occupied
-            else
-                self.center_left = self.marker
-                @turn_counter += 1
-            end
-        when "center"
-            if self.center != " "
-                puts occupied
-            else
-                self.center = self.marker
-                @turn_counter += 1
-            end
-        when "center right"
-            if self.center_right != " "
-                puts occupied
-            else
-                self.center_right = self.marker
-                @turn_counter += 1
-            end
-        when "bottom left"
-            if self.bottom_left != " "
-                puts occupied
-            else
-                self.bottom_left = self.marker
-                @turn_counter += 1
-            end
-        when "bottom center"
-            if self.bottom_center != " "
-                puts occupied
-            else
-                self.bottom_center = self.marker
-                @turn_counter += 1
-            end
-        when "bottom right"
-            if self.bottom_right != " "
-                puts occupied
-            else
-                self.bottom_right = self.marker
-                @turn_counter += 1
-            end
-        else
+        options = @choices.keys
+        if options.include?(position) == false
             puts "Please pick a valid position, your options are:"
             options.each do |option|
-               puts option
+                puts option
             end
+        elsif @choices[position] != @gap
+            puts occupied
+        else
+            @choices[position] = self.marker
+            @turn_counter += 1
         end
-            show_board
-            change_turn
+        show_board
+        change_turn
     end
 
     def check_winner
-        horizontal_top = self.top_left + self.top_center + self.top_right
-        horizontal_center = self.center_left + self.center + self.center_right
-        horizontal_bottom = self.bottom_left + self.bottom_center + self.bottom_right
+        horizontal_top = self.board[0].select { |pos| pos != "|" }.inject('+')
+        horizontal_center = self.board[2].select { |pos| pos != "|" }.inject('+')
+        horizontal_bottom = self.board[4].select { |pos| pos != "|" }.inject('+')
 
-        vertical_left = self.top_left + self.center_left + self.bottom_left
-        vertical_center = self.top_center + self.center + self.bottom_center
-        vertical_right = self.top_right + self.center_right + self.bottom_right
+        vertical_left = @choices["top left"] + @choices["center left"] + @choices["bottom left"]
+        vertical_center = @choices["top center"] + @choices["center"] + @choices["bottom center"]
+        vertical_right = @choices["top right"] + @choices["center right"] + @choices["bottom right"]
 
-        diagonal_decending = self.top_left + self.center + self.bottom_right
-        diagonal_ascending = self.bottom_left + self.center + self.top_right
+        diagonal_decending = @choices["top left"] + @choices["center"] + @choices["bottom right"]
+        diagonal_ascending = @choices["bottom left"] + @choices["center"] + @choices["top right"]
 
         winning_options = [horizontal_top, horizontal_center, horizontal_bottom, vertical_left, 
                            vertical_center, vertical_right, diagonal_ascending, diagonal_decending]
@@ -159,12 +93,12 @@ class TicTacToe
 
     def show_board
         self.board = [
-            [self.top_left, "|", self.top_center, "|", self.top_right], 
+            [@choices["top left"], "|", @choices["top center"], "|", @choices["top right"]], 
             ["-","-","-","-","-"],
-            [self.center_left, "|", self.center, "|", self.center_right], 
+            [@choices["center left"], "|", @choices["center"], "|", @choices["center right"]], 
             ["-","-","-","-","-"],
-            [self.bottom_left, "|", self.bottom_center, "|", self.bottom_right]
-                ]
+            [@choices["bottom left"], "|", @choices["bottom center"], "|", @choices["bottom right"]]
+        ]
         puts
         self.board.each do |row|
            puts row.each { |position| position }.join('')
@@ -196,7 +130,6 @@ class Player
     def self.number_of_players
         @@number_of_players
     end
-
 end
 
 game = TicTacToe.new
